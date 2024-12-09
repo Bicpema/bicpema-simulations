@@ -1,30 +1,8 @@
 /**
  * DOM要素の静的な設定を行う。
  */
+let MOVE_BUTTON;
 const elInit = () => {
-  /** グラフを描画するdiv要素 */
-  const GRAPH = createDiv(
-    `
-        <canvas id="graphCanvas"></canvas>
-      `
-  )
-    .id("graph")
-    .parent(select("#p5Container"))
-    .class("rounded border border-1");
-
-  /** グラフ切り替えボタンの親div要素 */
-  const GRAPH_BUTTON_PARENT = createDiv(
-    `
-        <button type="button" class="btn btn-secondary" id="graphButton">
-          グラフの切り替え
-        </button>
-      `
-  )
-    .id("graphButtonParent")
-    .parent(select("#p5Container"));
-
-  /** グラフ切り替えボタンのbutton要素 */
-  const GRAPH_BUTTON = select("#graphButton").mousePressed(graphButtonFunction);
   /** シミュレーション設定ボタンのbutton要素 */
   const MODAL_BUTTON = createButton("シミュレーション設定")
     .class("btn btn-primary")
@@ -32,6 +10,11 @@ const elInit = () => {
     .parent(select("#p5Container"))
     .attribute("data-bs-toggle", "modal")
     .attribute("data-bs-target", "#modal");
+  MOVE_BUTTON = createButton("止める")
+    .class("btn btn-primary")
+    .id("moveButton")
+    .parent(select("#p5Container"))
+    .mousePressed(moveButtonFunction);
 
   const modalWindow = createDiv(
     `
@@ -71,25 +54,19 @@ const elInit = () => {
     .attribute("aria-labelledby", "modalLabel")
     .attribute("aria-hidden", "true");
 
-  const YELLOW_CAR_SPEED_INPUT = select("#yellowCarSpeedInput").changed(initValue);
-  const RED_CAR_SPEED_INPUT = select("#redCarSpeedInput").changed(initValue);
+  select("#yellowCarSpeedInput").changed(initValue);
+  select("#redCarSpeedInput").changed(initValue);
 };
 
 /**
  * DOM要素の動的に変化する設定を行う。
  */
 const elSetting = () => {
-  const GRAPH = select("#graph");
-  const GRAPH_BUTTON_PARENT = select("#graphButtonParent");
-  // リサイズ処理
-  if (width <= 992) {
-    GRAPH.position((windowWidth - width) / 2, height + 125).size(width, width);
-    GRAPH_BUTTON_PARENT.position((windowWidth - width) / 2, height + width + 140);
-  } else {
-    GRAPH.position(windowWidth / 2 - width / 4, height + 125).size(width / 2, width / 2);
-    GRAPH_BUTTON_PARENT.position(windowWidth / 2 - width / 4, height + width / 2 + 140);
-  }
-  const MODAL_BUTTON = select("#modalButton").position(windowWidth / 2 - width / 2, 60 + height + 10);
+  const MODAL_BUTTON = select("#modalButton").position(windowWidth / 2 - this.width / 2, 60 + this.height + 10);
+  const MOVE_BUTTON = select("#moveButton").position(
+    windowWidth / 2 - this.width / 2 + MODAL_BUTTON.width + 10,
+    60 + this.height + 10
+  );
 };
 
 /**
@@ -122,5 +99,15 @@ const initValue = () => {
     RED_CAR.xarr.push({ x: i, y: RED_CAR.speed * i });
     YELLOW_CAR.varr.push({ x: i, y: YELLOW_CAR.speed });
     RED_CAR.varr.push({ x: i, y: RED_CAR.speed });
+  }
+};
+
+const moveButtonFunction = () => {
+  if (moveIs) {
+    moveIs = false;
+    MOVE_BUTTON.html("動かす");
+  } else {
+    moveIs = true;
+    MOVE_BUTTON.html("止める");
   }
 };
