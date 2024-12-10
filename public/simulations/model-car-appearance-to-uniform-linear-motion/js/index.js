@@ -12,16 +12,8 @@ function preload() {
   RED_CAR_IMAGE = loadImage("/assets/img/rCar.png");
 }
 
-/**
- * グラフの切り替え変数
- *
- * true:X-Tグラフ / false:V-Tグラフ
- *
- * @type {boolean}
- */
-let graphData;
-
 let CANVAS_CONTROLLER;
+let moveIs;
 
 function setup() {
   CANVAS_CONTROLLER = new BicpemaCanvasController();
@@ -35,8 +27,6 @@ function setup() {
   textSize(14);
   textAlign(CENTER);
   frameRate(60);
-
-  graphData = true;
 }
 
 function draw() {
@@ -55,21 +45,18 @@ function draw() {
    * スケールを表示するかを切り返すcheckbox要素
    * @type p5.Element
    */
-  const SCALE_CHECK_BOX = select("#scaleCheckBox");
 
-  if (SCALE_CHECK_BOX.checked()) {
-    drawScale(0, CANVAS_HEIGHT / 2, CANVAS_WIDTH, 50);
-    drawScale(0, CANVAS_HEIGHT, CANVAS_WIDTH, 50);
+  drawScale(0, CANVAS_HEIGHT / 2, CANVAS_WIDTH, 50);
+  drawScale(0, CANVAS_HEIGHT, CANVAS_WIDTH, 50);
+
+  if (moveIs) {
+    RED_CAR.update();
+    YELLOW_CAR.update();
   }
-
-  RED_CAR.update();
-  YELLOW_CAR.update();
   RED_CAR.drawTrajectory();
   YELLOW_CAR.drawTrajectory();
   RED_CAR.drawCar();
   YELLOW_CAR.drawCar();
-
-  graphDraw();
 }
 
 function windowResized() {
