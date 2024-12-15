@@ -14,11 +14,11 @@ export class CanvasController3d extends CanvasController {
    * @param {number} h_r 高さの比率（0.0~1.0）
    */
   constructor(p, f = true, w_r = 1.0, h_r = 1.0) {
+    super(p, f, w_r, h_r);
     this.p = p;
     this.fixed = f;
     this.widthRatio = w_r;
     this.heightRatio = h_r;
-    super(this.p, this.fixed, this.widthRatio, this.heightRatio);
   }
 
   /**
